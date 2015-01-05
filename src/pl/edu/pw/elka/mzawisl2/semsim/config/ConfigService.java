@@ -17,7 +17,7 @@ import pl.edu.pw.elka.mzawisl2.semsim.util.TextUtils;
 public class ConfigService {
 
 	public enum Param {
-		TEST_PARAM("test.param");
+		DISCO_INDEX_DIR("disco.index.dir");
 
 		private String name;
 
