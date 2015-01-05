@@ -16,8 +16,9 @@ public class Main {
 		try {
 			textsComparator = new TextsComparator();
 
-			System.out.println(textsComparator.compare("The procedure is generally performed in the second or third trimester.",
-					"The technique is used during the second and, occasionally, third trimester of pregnancy"));
+			System.out.println("\nTexts semantic similarity: "
+					+ textsComparator.compare("The procedure is generally performed in the second or third trimester.",
+							"The technique is used during the second and, occasionally, third trimester of pregnancy"));
 		} catch (SemSimException e) {
 			log.error("Something went wrong: " + LogUtils.getDescr(e));
 		}

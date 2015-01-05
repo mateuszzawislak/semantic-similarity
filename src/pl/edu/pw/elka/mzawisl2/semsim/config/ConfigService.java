@@ -17,7 +17,11 @@ import pl.edu.pw.elka.mzawisl2.semsim.util.TextUtils;
 public class ConfigService {
 
 	public enum Param {
-		DISCO_INDEX_DIR("disco.index.dir");
+		DISCO_INDEX_DIR("disco.index.dir"),
+		POS_ACCEPTED("pos.accepted"),
+		STOP_WORDS("stop.words"),
+		SIMILARITY_THRESHOLD("similarity.threshold"),
+		MAX_FREQUENT("max.frequent");
 
 		private String name;
 
@@ -81,6 +85,22 @@ public class ConfigService {
 				log.error("Invalid field type. Expected Integer!" + LogUtils.getDescr(e));
 				throw new SemSimException("Invalid field type. Expected Integer!");
 			}
+		}
+
+		return results;
+	}
+
+	public List<String> getList(Param param) {
+		String types = getParam(param);
+		List<String> results = new ArrayList<String>();
+
+		if (!TextUtils.isSet(types))
+			return results;
+
+		String[] typeList = types.split(LIST_SEPARATOR);
+
+		for (int i = 0; i < typeList.length; i++) {
+			results.add(typeList[i].trim());
 		}
 
 		return results;

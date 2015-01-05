@@ -8,4 +8,6 @@ public interface WordToWordComparator {
 
 	public double getIdf(String word) throws SemSimException;
 
+	public int getFrequency(String word);
+
 }

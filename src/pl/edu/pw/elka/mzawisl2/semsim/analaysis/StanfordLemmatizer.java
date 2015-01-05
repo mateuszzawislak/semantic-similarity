@@ -1,9 +1,13 @@
 package pl.edu.pw.elka.mzawisl2.semsim.analaysis;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
+import pl.edu.pw.elka.mzawisl2.semsim.config.ConfigService;
+import pl.edu.pw.elka.mzawisl2.semsim.config.ConfigService.Param;
 import edu.stanford.nlp.ling.CoreAnnotations.LemmaAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
@@ -17,6 +21,12 @@ public class StanfordLemmatizer implements Analyzer {
 
 	protected StanfordCoreNLP pipeline;
 
+	private Set<String> pos;
+
+	private Set<String> stopWords;
+
+	private final static ConfigService configService = ConfigService.getInstance();
+
 	public StanfordLemmatizer() {
 		// Create StanfordCoreNLP object properties, with POS tagging
 		// (required for lemmatization), and lemmatization
@@ -27,6 +37,9 @@ public class StanfordLemmatizer implements Analyzer {
 		// StanfordCoreNLP loads a lot of models, so you probably
 		// only want to do this once per execution
 		this.pipeline = new StanfordCoreNLP(props);
+
+		this.pos = new HashSet<String>(configService.getList(Param.POS_ACCEPTED));
+		this.stopWords = new HashSet<String>(configService.getList(Param.STOP_WORDS));
 	}
 
 	public List<String> lemmatize(String documentText) {
@@ -45,8 +58,11 @@ public class StanfordLemmatizer implements Analyzer {
 			for (CoreLabel token : sentence.get(TokensAnnotation.class)) {
 				// Retrieve and add the lemma for each word into the list of
 				// lemmas
-				lemmas.add(token.get(LemmaAnnotation.class));
-				System.out.println(token.get(PartOfSpeechAnnotation.class));
+				if (this.pos.contains(token.get(PartOfSpeechAnnotation.class))) {
+					String word = token.get(LemmaAnnotation.class);
+					if (!this.stopWords.contains(word))
+						lemmas.add(token.get(LemmaAnnotation.class));
+				}
 			}
 		}
 

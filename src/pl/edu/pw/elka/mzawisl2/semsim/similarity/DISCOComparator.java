@@ -12,12 +12,13 @@ public class DISCOComparator implements WordToWordComparator {
 
 	private static Logger log = Logger.getLogger(DISCOComparator.class);
 
-	private String dir;
-
 	private DISCO disco;
 
-	public DISCOComparator(String dir) throws IOException {
+	private long maxFreq;
+
+	public DISCOComparator(String dir, long maxFreq) throws IOException {
 		disco = new DISCO(dir, false);
+		this.maxFreq = maxFreq;
 	}
 
 	@Override
@@ -41,7 +42,17 @@ public class DISCOComparator implements WordToWordComparator {
 		}
 
 		// TODO
-		return Math.log(1 / freq);
+		return 0 == freq ? 0 : Math.log((maxFreq + 1) / freq);
+	}
+
+	@Override
+	public int getFrequency(String word) {
+		try {
+			return disco.frequency(word);
+		} catch (IOException e) {
+			log.error(LogUtils.getDescr(e));
+			return 0;
+		}
 	}
 
 }
