@@ -24,79 +24,54 @@ public class TextsComparator implements TextsComparatorLocal {
 
 	private final static ConfigService configService = ConfigService.getInstance();
 
+	private boolean printDebug;
+
 	private WordToWordComparator wtwComparator = null;
 
 	private Analyzer analyzer = null;
 
 	private float similarityThreshold;
 
-	public TextsComparator() throws SemSimException {
+	public TextsComparator(boolean printDebug) throws SemSimException {
+		this.printDebug = printDebug;
+
 		init();
-	}
-
-	private void init() throws SemSimException {
-		try {
-			String discoDir = configService.getParam(Param.DISCO_INDEX_DIR);
-			long maxFreq = configService.getParamLong(Param.MAX_FREQUENT, Long.MAX_VALUE);
-
-			if (!TextUtils.isSet(discoDir))
-				throw new SemSimException("Disco dictionary param (" + Param.DISCO_INDEX_DIR + ") not found");
-
-			wtwComparator = new DISCOComparator(discoDir, maxFreq);
-			analyzer = new StanfordLemmatizer();
-
-			similarityThreshold = configService.getParamFloat(Param.SIMILARITY_THRESHOLD, 0.0f);
-		} catch (IOException e) {
-			log.error(LogUtils.getDescr(e));
-			throw new SemSimException(e);
-		}
 	}
 
 	@Override
 	public float compare(String text1, String text2) {
 		try {
 			List<String> tokens1 = analyzer.lemmatize(text1);
-			System.out.println("Analyzed first text:\n" + tokens1);
 			List<String> tokens2 = analyzer.lemmatize(text2);
-			System.out.println("Analyzed second text:\n" + tokens2);
+
+			if (printDebug) {
+				System.out.println("Analyzed first text:\n" + tokens1);
+				System.out.println("Analyzed second text:\n" + tokens2);
+			}
 
 			List<ScoredPair> pairsA = constructPairs(tokens1, tokens2);
 
-			float simAB, normA;
-			System.out.println("Sim(A -> B) = " + (simAB = getTokensSimilarity(pairsA)));
-			System.out.println("normA = " + (normA = getTextNorm(pairsA)));
+			float simAB = getTokensSimilarity(pairsA);
+			float normA = getTextNorm(pairsA);
+			if (printDebug) {
+				System.out.println("Sim(A -> B) = " + simAB);
+				System.out.println("normA = " + normA);
+			}
 
 			List<ScoredPair> pairsB = constructPairs(tokens2, tokens1);
 
-			float simBA, normB;
-			System.out.println("Sim(B -> A) = " + (simBA = getTokensSimilarity(pairsB)));
-			System.out.println("normB = " + (normB = getTextNorm(pairsB)));
+			float simBA = getTokensSimilarity(pairsB);
+			float normB = getTextNorm(pairsB);
+			if (printDebug) {
+				System.out.println("Sim(B -> A) = " + simBA);
+				System.out.println("normB = " + normB);
+			}
 
 			return (simAB + simBA) / (2 * Math.max(normB, normA));
 		} catch (SemSimException e) {
 			log.error(LogUtils.getDescr(e));
 			return 0;
 		}
-	}
-
-	private float getTextNorm(List<ScoredPair> pairs) throws SemSimException {
-		float result = 0.0f;
-
-		for (ScoredPair scoredPair : pairs) {
-			result += wtwComparator.getIdf(scoredPair.getWords().getWord1());
-		}
-
-		return result;
-	}
-
-	private float getTokensSimilarity(List<ScoredPair> pairs) throws SemSimException {
-		float similarity = 0.0f;
-		for (ScoredPair scoredPair : pairs) {
-			Pair words = scoredPair.getWords();
-			similarity += scoredPair.getScore() * Math.max(wtwComparator.getIdf(words.getWord1()), wtwComparator.getIdf(words.getWord2()));
-		}
-
-		return similarity;
 	}
 
 	private List<ScoredPair> constructPairs(List<String> firstTextTokens, List<String> secondTextTokens) {
@@ -144,12 +119,51 @@ public class TextsComparator implements TextsComparatorLocal {
 					break;
 			}
 
-			System.out.println("\nConstructed set (S) of exclusive pairs of similar words between the two input texts:\n" + results);
+			if (printDebug)
+				System.out.println("\nConstructed set (S) of exclusive pairs of similar words between the two input texts:\n" + results);
 
 			return results;
 		} catch (SemSimException e) {
 			log.error(LogUtils.getDescr(e));
 			return null;
+		}
+	}
+
+	private float getTextNorm(List<ScoredPair> pairs) throws SemSimException {
+		float result = 0.0f;
+
+		for (ScoredPair scoredPair : pairs) {
+			result += wtwComparator.getIdf(scoredPair.getWords().getWord1());
+		}
+
+		return result;
+	}
+
+	private float getTokensSimilarity(List<ScoredPair> pairs) throws SemSimException {
+		float similarity = 0.0f;
+		for (ScoredPair scoredPair : pairs) {
+			Pair words = scoredPair.getWords();
+			similarity += scoredPair.getScore() * Math.max(wtwComparator.getIdf(words.getWord1()), wtwComparator.getIdf(words.getWord2()));
+		}
+
+		return similarity;
+	}
+
+	private void init() throws SemSimException {
+		try {
+			String discoDir = configService.getParam(Param.DISCO_INDEX_DIR);
+			long maxFreq = configService.getParamLong(Param.MAX_FREQUENT, Long.MAX_VALUE);
+
+			if (!TextUtils.isSet(discoDir))
+				throw new SemSimException("Disco dictionary param (" + Param.DISCO_INDEX_DIR + ") not found");
+
+			wtwComparator = new DISCOComparator(discoDir, maxFreq);
+			analyzer = new StanfordLemmatizer();
+
+			similarityThreshold = configService.getParamFloat(Param.SIMILARITY_THRESHOLD, 0.0f);
+		} catch (IOException e) {
+			log.error(LogUtils.getDescr(e));
+			throw new SemSimException(e);
 		}
 	}
 }

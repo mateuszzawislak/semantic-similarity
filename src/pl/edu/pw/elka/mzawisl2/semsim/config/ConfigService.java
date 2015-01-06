@@ -21,7 +21,8 @@ public class ConfigService {
 		POS_ACCEPTED("pos.accepted"),
 		STOP_WORDS("stop.words"),
 		SIMILARITY_THRESHOLD("similarity.threshold"),
-		MAX_FREQUENT("max.frequent");
+		MAX_FREQUENT("max.frequent"),
+		RATE_DISCRETIZATION("rate.discretization");
 
 		private String name;
 
@@ -64,6 +65,30 @@ public class ConfigService {
 
 	private ConfigService() throws SemSimException {
 		init();
+	}
+
+	public List<Float> getFloatList(Param param) throws SemSimException {
+		String types = getParam(param);
+		List<Float> results = new ArrayList<Float>();
+
+		if (!TextUtils.isSet(types))
+			return results;
+
+		String[] typeList = types.split(LIST_SEPARATOR);
+
+		for (int i = 0; i < typeList.length; i++) {
+			String name = typeList[i].trim();
+
+			try {
+				Float value = Float.parseFloat(name);
+				results.add(value);
+			} catch (NumberFormatException e) {
+				log.error("Invalid field type. Expected Float!" + LogUtils.getDescr(e));
+				throw new SemSimException("Invalid field type. Expected Float!");
+			}
+		}
+
+		return results;
 	}
 
 	public List<Integer> getIntegerList(Param param) throws SemSimException {

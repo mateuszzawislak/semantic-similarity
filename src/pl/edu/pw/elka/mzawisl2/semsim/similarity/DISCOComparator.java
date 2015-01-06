@@ -22,12 +22,12 @@ public class DISCOComparator implements WordToWordComparator {
 	}
 
 	@Override
-	public float getSimilarity(String word1, String word2) throws SemSimException {
+	public int getFrequency(String word) {
 		try {
-			return disco.secondOrderSimilarity(word1, word2);
+			return disco.frequency(word);
 		} catch (IOException e) {
 			log.error(LogUtils.getDescr(e));
-			throw new SemSimException(e);
+			return 0;
 		}
 	}
 
@@ -41,17 +41,16 @@ public class DISCOComparator implements WordToWordComparator {
 			throw new SemSimException(e);
 		}
 
-		// TODO
 		return 0 == freq ? 0 : Math.log((maxFreq + 1) / freq);
 	}
 
 	@Override
-	public int getFrequency(String word) {
+	public float getSimilarity(String word1, String word2) throws SemSimException {
 		try {
-			return disco.frequency(word);
+			return disco.secondOrderSimilarity(word1, word2);
 		} catch (IOException e) {
 			log.error(LogUtils.getDescr(e));
-			return 0;
+			throw new SemSimException(e);
 		}
 	}
 
