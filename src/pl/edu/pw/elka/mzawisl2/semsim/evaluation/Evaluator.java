@@ -32,7 +32,7 @@ public class Evaluator {
 
 		for (int i = 0; i < rateDiscretization.size(); ++i) {
 			if (evaluation < rateDiscretization.get(i))
-				return i - 1;
+				return i;
 		}
 
 		return rateDiscretization.size();
