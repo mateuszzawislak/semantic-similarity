@@ -45,8 +45,8 @@ public class TextsComparator implements TextsComparatorLocal {
 			List<String> tokens2 = analyzer.lemmatize(text2);
 
 			if (printDebug) {
-				System.out.println("Analyzed first text:\n" + tokens1);
-				System.out.println("Analyzed second text:\n" + tokens2);
+				System.out.println("\nAnalyzed first text:\n" + tokens1);
+				System.out.println("\nAnalyzed second text:\n" + tokens2);
 			}
 
 			List<ScoredPair> pairsA = constructPairs(tokens1, tokens2);
@@ -54,7 +54,7 @@ public class TextsComparator implements TextsComparatorLocal {
 			float simAB = getTokensSimilarity(pairsA);
 			float normA = getTextNorm(pairsA);
 			if (printDebug) {
-				System.out.println("Sim(A -> B) = " + simAB);
+				System.out.println("\nSim(A -> B) = " + simAB);
 				System.out.println("normA = " + normA);
 			}
 
@@ -63,7 +63,7 @@ public class TextsComparator implements TextsComparatorLocal {
 			float simBA = getTokensSimilarity(pairsB);
 			float normB = getTextNorm(pairsB);
 			if (printDebug) {
-				System.out.println("Sim(B -> A) = " + simBA);
+				System.out.println("\nSim(B -> A) = " + simBA);
 				System.out.println("normB = " + normB);
 			}
 

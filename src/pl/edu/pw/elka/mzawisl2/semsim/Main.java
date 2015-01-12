@@ -32,8 +32,8 @@ public class Main {
 	}
 
 	private static String getProperUse() {
-		String properUse = "semsim.jar -f Path:/to/first/document -s Path:/to/second/document [-quiet]:";
-		String example = "semsim.jar -f C:/Users/Mateusz/workspace_kepler/SemSim/doc1.txt -s C:/Users/Mateusz/workspace_kepler/SemSim/doc2.txt";
+		String properUse = "java -Dpl.edu.pw.elka.mzawisl2.semsim.config=C:/path/to/semsim.properties -jar semsim.jar -f Path:/to/first/document -s Path:/to/second/document [-quiet]:";
+		String example = "java -Dpl.edu.pw.elka.mzawisl2.semsim.config=C:/Users/Mateusz/workspace_kepler/SemSim/semsim.properties -jar semsim.jar -f C:/Users/Mateusz/workspace_kepler/SemSim/doc1.txt -s C:/Users/Mateusz/workspace_kepler/SemSim/doc2.txt";
 
 		return properUse + "\n\nExample use: " + example;
 	}
