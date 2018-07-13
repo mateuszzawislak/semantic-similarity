@@ -1,0 +1,37 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+project.sourceCompatibility = 1.8
+project.targetCompatibility = 1.8
+
+version = '0.1'
+task build(type: Jar) {
+    manifest {
+        attributes(
+		'Implementation-Title': 'Semantic similarity',
+		'Implementation-Version': version,
+		'Main-Class': 'pl.edu.pw.elka.mzawisl2.semsim.Main'
+	)
+    }
+
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+compileJava {
+	options.encoding = 'UTF-8'
+}
+
+repositories {
+	mavenCentral()
+
+	maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+	compile 'edu.stanford.nlp:stanford-corenlp:3.5.0@jar'
+	compile 'edu.stanford.nlp:stanford-corenlp:3.5.0:models@jar'
+	compile 'org.slf4j:slf4j-api:1.7.22@jar'
+	compile 'com.github.linguatools:disco:v3.0.0'
+}

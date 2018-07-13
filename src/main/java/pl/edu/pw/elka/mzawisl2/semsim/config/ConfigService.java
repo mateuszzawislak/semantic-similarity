@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.pw.elka.mzawisl2.semsim.exception.SemSimException;
 import pl.edu.pw.elka.mzawisl2.semsim.util.LogUtils;
@@ -36,7 +37,7 @@ public class ConfigService {
 		}
 	}
 
-	private static Logger log = Logger.getLogger(ConfigService.class);
+	private static Logger log = LoggerFactory.getLogger(ConfigService.class);
 
 	public static ConfigService getInstance() {
 		if (instance == null) {
@@ -69,7 +70,7 @@ public class ConfigService {
 
 	public List<Float> getFloatList(Param param) throws SemSimException {
 		String types = getParam(param);
-		List<Float> results = new ArrayList<Float>();
+		List<Float> results = new ArrayList<>();
 
 		if (!TextUtils.isSet(types))
 			return results;
@@ -93,7 +94,7 @@ public class ConfigService {
 
 	public List<Integer> getIntegerList(Param param) throws SemSimException {
 		String types = getParam(param);
-		List<Integer> results = new ArrayList<Integer>();
+		List<Integer> results = new ArrayList<>();
 
 		if (!TextUtils.isSet(types))
 			return results;
@@ -117,7 +118,7 @@ public class ConfigService {
 
 	public List<String> getList(Param param) {
 		String types = getParam(param);
-		List<String> results = new ArrayList<String>();
+		List<String> results = new ArrayList<>();
 
 		if (!TextUtils.isSet(types))
 			return results;

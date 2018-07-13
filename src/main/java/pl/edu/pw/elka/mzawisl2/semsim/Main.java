@@ -2,7 +2,8 @@ package pl.edu.pw.elka.mzawisl2.semsim;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.pw.elka.mzawisl2.semsim.evaluation.Evaluator;
 import pl.edu.pw.elka.mzawisl2.semsim.exception.InvalidUseException;
@@ -15,7 +16,7 @@ import pl.edu.pw.elka.mzawisl2.semsim.util.TextUtils;
 
 public class Main {
 
-	private static Logger log = Logger.getLogger(Main.class);
+	private static Logger log = LoggerFactory.getLogger(Main.class);
 
 	private static final String QUIET = "-quiet";
 
@@ -32,8 +33,8 @@ public class Main {
 	}
 
 	private static String getProperUse() {
-		String properUse = "java -Dpl.edu.pw.elka.mzawisl2.semsim.config=C:/path/to/semsim.properties -jar semsim.jar -f Path:/to/first/document -s Path:/to/second/document [-quiet]:";
-		String example = "java -Dpl.edu.pw.elka.mzawisl2.semsim.config=C:/Users/Mateusz/workspace_kepler/SemSim/semsim.properties -jar semsim.jar -f C:/Users/Mateusz/workspace_kepler/SemSim/doc1.txt -s C:/Users/Mateusz/workspace_kepler/SemSim/doc2.txt";
+		String properUse = "java -Dpl.edu.pw.elka.mzawisl2.semsim.config=/path/to/semsim.properties -jar semsim.jar -f /path/to/first/document -s /path/to/second/document [-quiet]:";
+		String example = "java -Dpl.edu.pw.elka.mzawisl2.semsim.config=/home/mza/storage/workspaces/workspace-mars-tvn/semantic-similarity/etc/semsim.properties -jar build/libs/semantic-similarity-0.1.jar -f /home/mza/Downloads/doc1.txt -s /home/mza/Downloads/doc2.txt";
 
 		return properUse + "\n\nExample use: " + example;
 	}

@@ -17,9 +17,11 @@ Requirements
 ------------------
 Java 8
 
-Words dictionary `http://www.linguatools.de/disco/disco-download_en.html`
+Words dictionary `http://www.linguatools.de/disco/disco-wordspaces.html#enwiki13slm -> https://www.dropbox.com/s/9fn8ewf0d4pwju6/enwiki-20130403-sim-lemma-mwl-lc.tar.bz2?dl=0`
 
-Dependencies
+Gradle 2.14
+
+Dependencies (imported by gradle file)
 ------------------
 DISCO `http://www.linguatools.de/disco/disco_en.html#api`
 
@@ -38,14 +40,18 @@ Configuration file
 
 Usage
 ------------------
-`java -Dpl.edu.pw.elka.mzawisl2.semsim.config=C:/path/semsim.properties -jar semsim.jar f doc1Path s doc2Path`
+Build project:
+
+`gradle clean build`
+
+`java -Dpl.edu.pw.elka.mzawisl2.semsim.config=/path/to/semsim.properties -jar semsim.jar -f /path/to/first/document -s /path/to/second/document [-quiet]:`
 
 Available parameters:
 
-`f doc1Path` path to the first text document containing text
+`-f doc1Path` path to the first text document containing text
 
-`s doc2Path` path to the second text document containing text
+`-s doc2Path` path to the second text document containing text
 
 Example usage:
 
-`java -Dpl.edu.pw.elka.mzawisl2.semsim.config=C:/Example/semsim.properties -jar semsim.jar f C:/Mateusz/doc1.txt s C:/Mateusz/doc2.txt`
+`java -Dpl.edu.pw.elka.mzawisl2.semsim.config=/home/mza/storage/workspaces/workspace-mars-tvn/semantic-similarity/etc/semsim.properties -jar build/libs/semantic-similarity-0.1.jar -f /home/mza/Downloads/doc1.txt -s /home/mza/Downloads/doc2.txt`

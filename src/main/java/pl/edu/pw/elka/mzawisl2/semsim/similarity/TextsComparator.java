@@ -6,8 +6,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import de.linguatools.disco.CorruptConfigFileException;
+import de.linguatools.disco.WrongWordspaceTypeException;
 import pl.edu.pw.elka.mzawisl2.semsim.analaysis.Analyzer;
 import pl.edu.pw.elka.mzawisl2.semsim.analaysis.StanfordLemmatizer;
 import pl.edu.pw.elka.mzawisl2.semsim.config.ConfigService;
@@ -20,7 +23,7 @@ import pl.edu.pw.elka.mzawisl2.semsim.util.TextUtils;
 
 public class TextsComparator implements TextsComparatorLocal {
 
-	private static Logger log = Logger.getLogger(TextsComparator.class);
+	private static Logger log = LoggerFactory.getLogger(TextsComparator.class);
 
 	private final static ConfigService configService = ConfigService.getInstance();
 
@@ -75,11 +78,11 @@ public class TextsComparator implements TextsComparatorLocal {
 	}
 
 	private List<ScoredPair> constructPairs(List<String> firstTextTokens, List<String> secondTextTokens) {
-		List<String> tokens1 = new ArrayList<String>(firstTextTokens);
-		List<String> tokens2 = new ArrayList<String>(secondTextTokens);
+		List<String> tokens1 = new ArrayList<>(firstTextTokens);
+		List<String> tokens2 = new ArrayList<>(secondTextTokens);
 
 		try {
-			List<ScoredPair> possiblePairs = new ArrayList<ScoredPair>();
+			List<ScoredPair> possiblePairs = new ArrayList<>();
 			for (String word1 : tokens1) {
 				for (String word2 : tokens2) {
 					float similarity = wtwComparator.getSimilarity(word1, word2);
@@ -103,7 +106,7 @@ public class TextsComparator implements TextsComparatorLocal {
 				}
 			});
 
-			List<ScoredPair> results = new ArrayList<ScoredPair>();
+			List<ScoredPair> results = new ArrayList<>();
 			for (ScoredPair scoredPair : possiblePairs) {
 				String firstWord = scoredPair.getWords().getWord1();
 				String secondWord = scoredPair.getWords().getWord2();
@@ -123,7 +126,7 @@ public class TextsComparator implements TextsComparatorLocal {
 				System.out.println("\nConstructed set (S) of exclusive pairs of similar words between the two input texts:\n" + results);
 
 			return results;
-		} catch (SemSimException e) {
+		} catch (IOException | WrongWordspaceTypeException e) {
 			log.error(LogUtils.getDescr(e));
 			return null;
 		}
@@ -161,7 +164,7 @@ public class TextsComparator implements TextsComparatorLocal {
 			analyzer = new StanfordLemmatizer();
 
 			similarityThreshold = configService.getParamFloat(Param.SIMILARITY_THRESHOLD, 0.0f);
-		} catch (IOException e) {
+		} catch (IOException | CorruptConfigFileException e) {
 			log.error(LogUtils.getDescr(e));
 			throw new SemSimException(e);
 		}

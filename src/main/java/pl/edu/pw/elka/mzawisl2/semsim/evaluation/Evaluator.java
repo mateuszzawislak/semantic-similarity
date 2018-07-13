@@ -2,7 +2,8 @@ package pl.edu.pw.elka.mzawisl2.semsim.evaluation;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.pw.elka.mzawisl2.semsim.config.ConfigService;
 import pl.edu.pw.elka.mzawisl2.semsim.config.ConfigService.Param;
@@ -12,7 +13,7 @@ import pl.edu.pw.elka.mzawisl2.semsim.util.LogUtils;
 
 public class Evaluator {
 
-	private static Logger log = Logger.getLogger(Evaluator.class);
+	private static Logger log = LoggerFactory.getLogger(Evaluator.class);
 
 	private final static ConfigService configService = ConfigService.getInstance();
 
